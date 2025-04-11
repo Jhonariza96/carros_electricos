@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.carros_electricos"
-    compileSdk = 33  // Actualiza a la versión 34
+    compileSdk = 33 
 
     ndkVersion = "27.0.12077973"
 
@@ -17,7 +17,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "17" // Mantén este valor
+        jvmTarget = "17"
     }
 
     defaultConfig {

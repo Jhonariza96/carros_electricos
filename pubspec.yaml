@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.6
-  flutter_barcode_scanner: ^2.0.0
+  qr_code_scanner: ^1.0.0
 
 
 

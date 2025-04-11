@@ -1,8 +1,8 @@
 class Car {
   final String id;
-  final String conductor; // Nuevo campo
-  final String placa;    // Nuevo campo
-  final String imagen;   // Nuevo campo
+  final String conductor; 
+  final String placa;   
+  final String imagen; 
 
   Car({
     required this.id,

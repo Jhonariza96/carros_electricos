@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRScanScreen extends StatefulWidget {
   const QRScanScreen({super.key});
@@ -9,7 +9,8 @@ class QRScanScreen extends StatefulWidget {
 }
 
 class _QRScanScreenState extends State<QRScanScreen> {
-  String _scanResult = "Escanea un código QR";
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  QRViewController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -18,33 +19,41 @@ class _QRScanScreenState extends State<QRScanScreen> {
         title: const Text('Escanear QR'),
         backgroundColor: Colors.blue,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: _scanQRCode,
-              child: const Text("Escanear QR"),
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          QRView(
+            key: qrKey,
+            onQRViewCreated: (controller) {
+              this.controller = controller;
+              controller.scannedDataStream.listen((scanData) {
+                // Lógica para manejar el código escaneado
+              });
+            },
+            overlay: QrScannerOverlayShape(
+              borderColor: Colors.blue,
+              borderRadius: 10,
+              borderLength: 30,
+              borderWidth: 10,
+              cutOutSize: MediaQuery.of(context).size.width * 0.7,
             ),
-            SizedBox(height: 20),
-            Text(_scanResult, style: TextStyle(fontSize: 18)),
-          ],
-        ),
+          ),
+          Positioned(
+            bottom: 40,
+            child: ElevatedButton.icon(
+              icon: const Icon(Icons.flash_on),
+              label: const Text('Flash'),
+              onPressed: () => controller?.toggleFlash(),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Future<void> _scanQRCode() async {
-    String scanResult = await FlutterBarcodeScanner.scanBarcode(
-      '#ff6666', // Color del borde del scanner
-      'Cancelar', // Texto para el botón de cancelar
-      true, // Activar la linterna (flash)
-      ScanMode.QR, // Escanear solo códigos QR
-    );
-    if (scanResult != "-1") { // Si no se canceló el escaneo
-      setState(() {
-        _scanResult = scanResult;
-      });
-    }
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
   }
 }
